@@ -1,5 +1,5 @@
 #This is a mixin class for system definitions to be used by f2_system class
-#Last modification by Marko Kosunen, marko.kosunen@aalto.fi, 06.08.2018 11:10
+#Last modification by Marko Kosunen, marko.kosunen@aalto.fi, 06.08.2018 18:22
 from f2_signal_gen import *
 from f2_channel import *
 from f2_rx import *
@@ -68,19 +68,11 @@ class system_definitions_mixin:
     def define_fader2(self):
     #This is the definition for the Transceiver system
     # Aim is to make it resemple the actual circuit as closely as possible
-        #TX_dsp implementation
-        #Signal generator model here
-        self.signal_gen_tx=f2_signal_gen(self)
-        self.signal_gen_tx.Digital='True'
-        self.signal_gen_tx.Rs=self.Rs_dsp
 
         # One RX_path takes in multiple users and either
         # Sums the user signals or just transmits one of them
         self.tx_dsp=f2_tx_dsp(self)
-        self.signal_gen_tx.Bits=self.tx_dsp.Txbits
 
-        # Matrix of [1,time,users] 
-        self.tx_dsp.iptr_A=self.signal_gen_tx._Z
         self.tx_dacs=[ f2_dac(self) for i in range(self.Txantennas) ]
         for i in range(self.Txantennas):
             self.tx_dacs[i].iptr_real_t=self.tx_dsp._Z_real_t[i]
@@ -89,25 +81,8 @@ class system_definitions_mixin:
             self.tx_dacs[i].iptr_imag_b=self.tx_dsp._Z_imag_b[i]
         #Not connected anywhere, just check if you can run the sim
 
-        #RX_dsp implementation
-        #Signal generator model here
-        self.signal_gen_rx=f2_signal_gen(self)
 
-        #The mached filters for the symbol synchronization
-        #These are considered reconfigurable
-        self.Hstf=np.conj(self.signal_gen_rx.sg802_11n._PLPCseq_short[0:64])
-        self.Hstf=self.Hstf[::-1]
-        self.Hltf=np.conj(self.signal_gen_rx.sg802_11n._PLPCseq_long[0:16])
-        self.Hltf=self.Hltf[::-1]
-
-        self.signal_gen_rx.set_transmit_power() #default 30dBm
-        self.channel=f2_channel(self)
-        #_Z of the channel can not be null if range assignment is done
-
-        #Make this as an array of pointers
-        self.channel.iptr_A=self.signal_gen_rx._Z
-
-        #rx_block
+        #Rx_block
         self.rx= [f2_rx(self) for i in range(self.Rxantennas)]
         #Set the Rx models
         for i in range(self.Rxantennas):
@@ -121,8 +96,6 @@ class system_definitions_mixin:
         #No cpu
 
         for i in range(self.Rxantennas):
-            #connect rxs to channel 
-            self.rx[i].iptr_A=self.channel._Z.Value[i]
             #connect adc rx 
             self.adc[i].iptr_A=self.rx[i]._Z
             self.rx_dsp.iptr_A.Value[i]=self.adc[i]._Z
