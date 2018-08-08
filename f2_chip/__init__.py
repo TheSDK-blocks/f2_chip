@@ -8,9 +8,7 @@ from f2_chip.system_definitions_mixin import system_definitions_mixin
 
 class f2_chip(thesdk,system_definitions_mixin):
     def __init__(self,*arg):
-        self.proplist=['rxmodels', 'Txantennas', 'Txpower', 'Rxantennas', 'Users', 'Disableuser'
-                'Nbits', 'Txbits' 'Channeldir', 'CPUFBMODE', 'DSPmode', 'dsp_decimator_model'
-                'dsp_decimator_scales', 'noisetemp', 'Rs', 'Rs_dsp', 'Hstf', 'ofdmdict'] 
+        self.proplist=[ 'rxmodels', 'Txantennas', 'Txpower', 'Rxantennas', 'Users', 'Disableuser', 'Nbits', 'Txbits', 'Channeldir', 'CPUFBMODE', 'DSPmode', 'dsp_decimator_model', 'dsp_decimator_scales', 'noisetemp', 'Rs', 'Rs_dsp', 'Hstf', 'ofdmdict' ]; 
         self.rxmodels=[]
         #Signals should be in form s(user,time,Txantenna)
         self.Txantennas=1                       #All the antennas process the same data
