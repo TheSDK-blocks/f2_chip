@@ -5,6 +5,7 @@ import multiprocessing
 from functools import reduce
 from f2_signal_gen import *
 from f2_chip.system_definitions_mixin import system_definitions_mixin
+from f2_util_classes import *
 
 class f2_chip(thesdk,system_definitions_mixin):
     def __init__(self,*arg):
@@ -37,7 +38,6 @@ class f2_chip(thesdk,system_definitions_mixin):
         self.DEBUG= False
         if len(arg)>=1:
             parent=arg[0]
-            #self.logfile=arg[1]['logfile']
             self.copy_propval(parent,self.proplist)
             self.parent =parent;
         self.init()
@@ -133,6 +133,7 @@ class f2_chip(thesdk,system_definitions_mixin):
         self.serdes.run()
     
     def run_tx_dsp(self):  
+
         self.tx_dsp.init()
         self.tx_dsp.run()
 

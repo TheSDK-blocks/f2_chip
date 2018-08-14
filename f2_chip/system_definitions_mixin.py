@@ -1,5 +1,6 @@
 #This is a mixin class for system definitions to be used by f2_system class
-#Last modification by Marko Kosunen, marko.kosunen@aalto.fi, 06.08.2018 18:22
+#Last modification by Marko Kosunen, marko.kosunen@aalto.fi, 13.08.2018 15:43
+from f2_util_classes import *
 from f2_signal_gen import *
 from f2_channel import *
 from f2_rx import *
@@ -11,6 +12,7 @@ from f2_tx_dsp import *
 from f2_serdes import *
 from f2_digital_postproc import *
 from f2_central_processor import *
+
 
 class system_definitions_mixin:
     def define_simple_rx(self):
