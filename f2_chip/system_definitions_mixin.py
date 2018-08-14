@@ -1,5 +1,5 @@
 #This is a mixin class for system definitions to be used by f2_system class
-#Last modification by Marko Kosunen, marko.kosunen@aalto.fi, 13.08.2018 15:43
+#Last modification by Marko Kosunen, marko.kosunen@aalto.fi, 14.08.2018 14:14
 from f2_util_classes import *
 from f2_signal_gen import *
 from f2_channel import *
@@ -103,5 +103,5 @@ class system_definitions_mixin:
             self.rx_dsp.iptr_A.Value[i]=self.adc[i]._Z
 
         #Do not need postprocessing any more
-        self.serdes.iptr_A=self.rx_dsp._decimated
+        #self.serdes.iptr_A=self.rx_dsp._decimated
 
