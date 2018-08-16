@@ -102,7 +102,7 @@ class f2_chip(thesdk):
 
     
     def run_tx_dsp(self):  
-        self.dsp.run_tx
+        self.dsp.run_tx()
 
         #Set the parallel processing
         for i in self.tx_dacs:
@@ -148,7 +148,6 @@ class f2_chip(thesdk):
         for i in self.adc: 
             i.run()
 
-        print(self.dsp.rx_dsp.model)
         self.dsp.run_rx()
 
         #self.serdes.init()
