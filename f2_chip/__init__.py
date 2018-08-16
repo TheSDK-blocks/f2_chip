@@ -4,7 +4,7 @@ from thesdk import *
 import multiprocessing
 from functools import reduce
 from f2_signal_gen import *
-from f2_dsp_2019 import *
+from f2_dsp import *
 from f2_signal_gen import *
 from f2_channel import *
 from f2_rx import *
@@ -40,7 +40,7 @@ class f2_chip(thesdk):
         self.tx=[]
         self.nserdes=1
         self.serdes=[]
-        self.DEBUG= False
+        self.DEBUG=False
         self.iptr_A=refptr()
         if len(arg)>=1:
             parent=arg[0]
@@ -70,7 +70,7 @@ class f2_chip(thesdk):
 
         # One RX_path takes in multiple users and either
         # Sums the user signals or just transmits one of them
-        self.dsp=f2_dsp_2019(self)
+        self.dsp=f2_dsp(self)
 
         self.tx_dacs=[ f2_dac(self) for i in range(self.Txantennas) ]
         for i in range(self.Txantennas):
