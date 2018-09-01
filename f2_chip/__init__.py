@@ -15,9 +15,10 @@ from f2_util_classes import *
 
 class f2_chip(thesdk):
     def __init__(self,*arg):
-        self.proplist=[ 'rxmodels', 'Txantennas', 'Txpower', 'Rxantennas', 'Users', 'Disableuser', 'Nbits', 'Txbits', 'Channeldir', 'CPUFBMODE', 'DSPmode', 'dsp_decimator_model', 'dsp_decimator_scales', 'noisetemp', 'Rs', 'Rs_dsp', 'Hstf', 'ofdmdict' ]; 
+        self.proplist=[ 'txrxmode','rxmodels', 'Txantennas', 'Txpower', 'Rxantennas', 'Users', 'Disableuser', 'Nbits', 'Txbits', 'Channeldir', 'CPUFBMODE', 'DSPmode', 'dsp_decimator_model', 'dsp_decimator_scales', 'noisetemp', 'Rs', 'Rs_dsp', 'Hstf', 'ofdmdict' 'nserdes' ]; 
         self.rxmodels=[]
         #Signals should be in form s(user,time,Txantenna)
+        self.txrxmode='tx'
         self.Txantennas=1                       #All the antennas process the same data
         self.Txpower=30                         #Output power per antenna in dBm
         self.Rxantennas=4
@@ -38,7 +39,7 @@ class f2_chip(thesdk):
         self.adc=[]
         self.dsp=[]
         self.tx=[]
-        self.nserdes=1
+        self.nserdes=2
         self.serdes=[]
         self.DEBUG=False
         self.iptr_A=refptr()
@@ -123,7 +124,7 @@ class f2_chip(thesdk):
             proc[l].join()
             l+=1
 
-    def run_rx_dsp(self):  
+    def run_rx_analog(self):  
         # Parallel processing: When you call obj.method in a child process, the child process is getting its
         #own separate copy of each instance variable in obj. So, the changes you make to
         #them in the child will not be reflected in the parent. You'll need to
@@ -143,96 +144,24 @@ class f2_chip(thesdk):
             self.rx[i]._Z.Value=que1[i].get()
             proc1[i].join()
 
-        print(self.rx[0]._Z.Value)
-
         for i in self.adc: 
             i.run()
 
+    def run_rx_dsp(self):
         self.dsp.run_rx()
 
-        #self.serdes.init()
-        #self.serdes.run()
 
-#    def run(self):
-#        self.channel.run()
-#
-#        # Parallel processing: When you call obj.method in a child process, the child process is getting its
-#        #own separate copy of each instance variable in obj. So, the changes you make to
-#        #them in the child will not be reflected in the parent. You'll need to
-#        #explicitly pass the changed values back to the parent via a
-#        #multiprocessing.Queue in order to make the changes take effect the parent:
-#        k=0
-#        que1=[]
-#        proc1=[]
-#        out=[]
-#        for i in self.rx: 
-#            i.init()
-#            que1.append(multiprocessing.Queue())
-#            proc1.append(multiprocessing.Process(target=self.rx[k].run, args=(que1[k],)))
-#            proc1[k].start()
-#            k += 1 
-#
-#        for i in range(self.Rxantennas):
-#            self.rx[i]._Z.Value=que1[i].get()
-#            proc1[i].join()
-#
-#        for i in self.adc: 
-#            i.init()
-#            i.run()
-#
-#        #Run dsp in parallel
-#        #Split in two phases: First, get the channel estimates
-#        l=0
-#        que2=[]
-#        proc2=[]
-#        for i in range(self.Rxantennas):
-#            self.dsp[i].init()
-#            que2.append(multiprocessing.Queue())
-#            proc2.append(multiprocessing.Process(target=self.dsp[i].get_channel_estimate, args=(que2[l],)))
-#            proc2[l].start()
-#            l += 1 
-#
-#        #Collect results for dsps
-#        l=0
-#        for i in range(self.Rxantennas):
-#            self.dsp[i]._decimated.Value=que2[l].get()
-#            self.dsp[i]._delayed.Value=que2[l].get()
-#            self.dsp[i]._sync_index.Value=que2[l].get()
-#            self.dsp[i]._Frame_sync_short.Value=que2[l].get()
-#            self.dsp[i]._Frame_sync_long.Value=que2[l].get()
-#            for k in range(self.Users):
-#                self.dsp[i]._channel_est.Value[k].Value=que2[l].get()
-#                self.dsp[i]._channel_corr.Value[k].Value=que2[l].get()
-#            proc2[l].join()
-#            l+=1
-#                
-#        #This is the CPU for zero-forcing       
-#        self.cpu.run() 
-#        # 
-#        ##Then, receive the data
-#        l=0
-#        que3=[]
-#        proc3=[]
-#        for i in range(self.Rxantennas):
-#            que3.append(multiprocessing.Queue())
-#            proc3.append(multiprocessing.Process(target=self.dsp[i].receive_data, args=(que3[l],)))
-#            proc3[l].start()
-#            l += 1 
-#
-#        #Collect results for dsps
-#        l=0
-#        for i in range(self.Rxantennas):
-#            for k in range(self.Users):
-#                self.dsp[i]._symbols.Value[k].Value=que3[l].get()
-#            for k in range(self.Users):
-#                self.dsp[i]._wordstream.Value[k].Value=que3[l].get()
-#                self.dsp[i]._bitstream.Value[k].Value=que3[l].get()
-#            proc3[l].join()
-#            l+=1
-#
-#
-#        self.postproc.init()
-#        self.postproc.run()
-#
-#        self.serdes.init()
-#        self.serdes.run()
+    #def run(self):
+    #    if self.model=='py':
+    #        if self.txrxmode=='tx':
+    #            self.run_tx_dsp()
+    #        elif sel.txrxmode=='rx':
+    #            self.run_rx_dsp()
+    #    elif self.model=='sv':
+    #        # Verilog model does not make distinction between modes
+    #        # Operation is taken care of by proper parameter settings.
+    #        self.write_infile()
+    #        self.run_verilog()
+    #        sefl.read_outfile()
+
+
