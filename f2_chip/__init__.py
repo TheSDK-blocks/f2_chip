@@ -15,7 +15,28 @@ from f2_util_classes import *
 
 class f2_chip(thesdk):
     def __init__(self,*arg):
-        self.proplist=[ 'txrxmode','rxmodels', 'Txantennas', 'Txpower', 'Rxantennas', 'Users', 'Disableuser', 'Nbits', 'Txbits', 'Channeldir', 'CPUFBMODE', 'DSPmode', 'dsp_decimator_model', 'dsp_decimator_scales', 'dsp_decimator_cic3shift','noisetemp', 'Rs', 'Rs_dsp', 'Hstf', 'ofdmdict' 'nserdes' ]; 
+        self.proplist=[ 'rxmodels', 
+                        'Txantennas', 
+                        'Txpower', 
+                        'Rxantennas', 
+                        'Users', 
+                        'Rxgain',
+                        'Rx_NF_dB'
+                        'Disableuser', 
+                        'Nbits', 
+                        'Txbits', 
+                        'Channeldir', 
+                        'CPUFBMODE', 
+                        'DSPmode', 
+                        'dsp_decimator_scales', 
+                        'dsp_decimator_cic3shift',
+                        'rx_output_mode',
+                        'noisetemp', 
+                        'Rs', 
+                        'Rs_dsp', 
+                        'Hstf', 
+                        'ofdmdict' 
+                        'nserdes' ]; 
         self.rxmodels=[]
         #Signals should be in form s(user,time,Txantenna)
         self.txrxmode='tx'
@@ -32,6 +53,7 @@ class f2_chip(thesdk):
         self.dsp_decimator_model='py'
         self.dsp_decimator_scales=[1,1,1,1]
         self.dsp_decimator_cic3shift=4
+        self.rx_output_mode=1
         self.noisetemp=290
         self.Rs=160e6
         self.Rs_dsp=20e6
