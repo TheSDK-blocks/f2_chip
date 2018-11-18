@@ -126,9 +126,10 @@ class f2_chip(thesdk):
 
     
     def run_tx_dsp(self):  
+        print('DSP mode is %s'%(self.dsp.model))
         self.dsp.run_tx()
-
         #Set the parallel processing
+        
         for i in self.tx_dacs:
             i.par='True'
         l=0
