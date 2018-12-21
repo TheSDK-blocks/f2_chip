@@ -118,7 +118,7 @@ class f2_chip(thesdk):
         for i in range(self.Rxantennas):
             #connect adc rx 
             self.adc[i].iptr_A=self.rx[i]._Z
-            self.dsp.iptr_A.Value[i]=self.adc[i]._Z
+            self.dsp.iptr_A.Data[i]=self.adc[i]._Z
 
         #self.serdes=f2_serdes(self)
         #self.serdes.Users=1 #We use only 1 user coming out of the dsp (data is the same)
