@@ -5,7 +5,7 @@ from f2_signal_gen import *
 from f2_channel import *
 from f2_rx import *
 from f2_adc import *
-from f2_dac import *
+from segmented_dac import *
 from f2_dsp import *
 #from f2_rx_dsp import *
 #from f2_tx_dsp import *

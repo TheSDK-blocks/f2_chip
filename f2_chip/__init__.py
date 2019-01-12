@@ -9,7 +9,7 @@ from f2_signal_gen import *
 from f2_channel import *
 from f2_rx import *
 from f2_adc import *
-from f2_dac import *
+from segmented_dac import *
 from f2_dsp import *
 from f2_util_classes import *
 
@@ -96,7 +96,7 @@ class f2_chip(thesdk):
         # Sums the user signals or just transmits one of them
         self.dsp=f2_dsp(self)
 
-        self.tx_dacs=[ f2_dac(self) for i in range(self.Txantennas) ]
+        self.tx_dacs=[ segmented_dac(self) for i in range(self.Txantennas) ]
         for i in range(self.Txantennas):
             self.tx_dacs[i].iptr_real_t=self.dsp._Z_real_t[i]
             self.tx_dacs[i].iptr_real_b=self.dsp._Z_real_b[i]
