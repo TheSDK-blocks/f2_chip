@@ -53,22 +53,22 @@ class system_definitions_mixin:
 #        self.cpu=f2_central_processor(self)
 #        
 #        #[antennas,users]
-#        self.cpu.iptr_R_c_mat.Value=[[self.dsp[k]._channel_corr.Value[i] 
+#        self.cpu.iptr_R_c_mat.Data=[[self.dsp[k]._channel_corr.Data[i] 
 #            for i in range(self.Users)] for k in range(self.Rxantennas)]
-#        self.cpu.iptr_channel_mat.Value=[[self.dsp[k]._channel_est.Value[i] 
+#        self.cpu.iptr_channel_mat.Data=[[self.dsp[k]._channel_est.Data[i] 
 #            for i in range(self.Users)] for k in range(self.Rxantennas)]
 #
 #        for i in range(self.Rxantennas):
 #            #connect rxs to channel 
-#            self.rx[i].iptr_A=self.channel._Z.Value[i]
+#            self.rx[i].iptr_A=self.channel._Z.Data[i]
 #            #connect adc rx 
 #            self.adc[i].iptr_A=self.rx[i]._Z
 #            self.dsp[i].iptr_A=self.adc[i]._Z
 #
 #            for k in range(0,self.Users):
 #                #connect dsp to adcs. K dsps per antenna
-#                self.dsp[i].iptr_reception_vect.Value[k]=self.cpu._R_reception_mat.Value[i][k]
+#                self.dsp[i].iptr_reception_vect.Data[k]=self.cpu._R_reception_mat.Data[i][k]
 #                
-#        self.postproc.iptr_A.Value=[[self.dsp[k]._symbols.Value[i] for i in range(self.Users)] for k in range(self.Rxantennas)]
+#        self.postproc.iptr_A.Data=[[self.dsp[k]._symbols.Data[i] for i in range(self.Users)] for k in range(self.Rxantennas)]
 #        self.serdes.iptr_A=self.postproc._wordstream
 

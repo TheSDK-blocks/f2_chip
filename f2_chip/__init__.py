@@ -65,7 +65,7 @@ class f2_chip(thesdk):
         self.nserdes=2
         self.serdes=[]
         self.DEBUG=False
-        self.iptr_A=refptr()
+        self.iptr_A=IO()
         if len(arg)>=1:
             parent=arg[0]
             self.copy_propval(parent,self.proplist)
@@ -78,12 +78,12 @@ class f2_chip(thesdk):
         [ self.rxmodels.append('py') for i in range(self.Rxantennas) ];
         [ self.Disableuser.append(False) for i in range(self.Users) ]              #Disable data transmission for cerrtain users
         self.Rxantennalocations=np.arange(self.Rxantennas)*0.3
-        self.iptr_A.Value=[refptr() for _ in range(self.Rxantennas)]
+        self.iptr_A.Data=[IO() for _ in range(self.Rxantennas)]
 
-        self._Z_real_t=[ refptr() for _ in range(self.Txantennas) ]
-        self._Z_real_b=[ refptr() for _ in range(self.Txantennas) ]
-        self._Z_imag_t=[ refptr() for _ in range(self.Txantennas) ]
-        self._Z_imag_b=[ refptr() for _ in range(self.Txantennas) ]
+        self._Z_real_t=[ IO() for _ in range(self.Txantennas) ]
+        self._Z_real_b=[ IO() for _ in range(self.Txantennas) ]
+        self._Z_imag_t=[ IO() for _ in range(self.Txantennas) ]
+        self._Z_imag_b=[ IO() for _ in range(self.Txantennas) ]
 
         #Rx and tx refer to serdes lane tx is the transmitter input of the serdes
         self._io_lanes_tx=[ iofifosigs(**{'users':self.Users}) for _ in range(self.nserdes)] #this is an output
@@ -112,7 +112,7 @@ class f2_chip(thesdk):
             self.rx[i].model=self.rxmodels[i]
             # Io defined by load 
             # Always define upper level by the lower level.
-            self.iptr_A.Value[i]=self.rx[i].iptr_A
+            self.iptr_A.Data[i]=self.rx[i].iptr_A
 
         self.adc=[f2_adc(self) for i in range(self.Rxantennas)]
         for i in range(self.Rxantennas):
@@ -144,7 +144,7 @@ class f2_chip(thesdk):
         #Collect results for dsps
         l=0
         for i in range(self.Txantennas):
-            self.tx_dacs[i]._Z.Value=que[l].get()
+            self.tx_dacs[i]._Z.Data=que[l].get()
             proc[l].join()
             l+=1
 
@@ -165,7 +165,7 @@ class f2_chip(thesdk):
             k += 1 
 
         for i in range(self.Rxantennas):
-            self.rx[i]._Z.Value=que1[i].get()
+            self.rx[i]._Z.Data=que1[i].get()
             proc1[i].join()
 
         for i in self.adc: 
