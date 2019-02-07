@@ -4,7 +4,6 @@ from thesdk import *
 import multiprocessing
 from functools import reduce
 from f2_signal_gen import *
-from f2_dsp import *
 from f2_signal_gen import *
 from f2_channel import *
 from f2_rx import *
@@ -66,6 +65,9 @@ class f2_chip(thesdk):
         self.serdes=[]
         self.DEBUG=False
         self.iptr_A=IO()
+        self.scan=IO()
+        self.scan.Data=Bundle()
+
         if len(arg)>=1:
             parent=arg[0]
             self.copy_propval(parent,self.proplist)
@@ -95,6 +97,7 @@ class f2_chip(thesdk):
         # One RX_path takes in multiple users and either
         # Sums the user signals or just transmits one of them
         self.dsp=f2_dsp(self)
+        self.dsp.scan=self.scan
 
         self.tx_dacs=[ segmented_dac(self) for i in range(self.Txantennas) ]
         for i in range(self.Txantennas):
@@ -120,11 +123,6 @@ class f2_chip(thesdk):
             self.adc[i].iptr_A=self.rx[i]._Z
             self.dsp.iptr_A.Data[i]=self.adc[i]._Z
 
-        #self.serdes=f2_serdes(self)
-        #self.serdes.Users=1 #We use only 1 user coming out of the dsp (data is the same)
-        #No cpu
-
-    
     def run_tx_dsp(self):  
         print('DSP mode is %s'%(self.dsp.model))
         self.dsp.run_tx()
